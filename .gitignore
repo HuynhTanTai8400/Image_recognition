@@ -1,0 +1,11 @@
+# Variables and sensitive information
+.env
+
+# Python bytecode
+__pycache__/
+
+# Python virtual environment
+venv/
+
+# Test file (if you don't want to push it)
+test.py

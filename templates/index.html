@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Map - Tìm kiếm món ăn bằng hình ảnh AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #007bff; }
+        .upload-section { margin-bottom: 30px; text-align: center; border: 2px dashed #ccc; padding: 20px; border-radius: 5px; }
+        .upload-section input[type="file"] { margin-bottom: 10px; }
+        .upload-section button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .upload-section button:hover { background-color: #0056b3; }
+        .result-section { margin-top: 20px; padding: 20px; border: 1px solid #eee; border-radius: 5px; background-color: #f9f9f9; }
+        .result-section h2 { color: #28a745; }
+        .result-image { max-width: 100%; height: auto; display: block; margin: 15px auto; border: 1px solid #ddd; border-radius: 4px; }
+        .restaurant-list ul { list-style: none; padding: 0; }
+        .restaurant-list li { background-color: #e2f0cb; margin-bottom: 8px; padding: 10px; border-radius: 4px; border-left: 5px solid #28a745; }
+        .error-message { color: red; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Map Map - Tìm kiếm món ăn bằng hình ảnh AI</h1>
+
+        <div class="upload-section">
+            <p>Tải lên một hình ảnh món ăn để tìm kiếm nhà hàng!</p>
+            <form action="/predict" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept="image/*" required>
+                <button type="submit">Tìm kiếm</button>
+            </form>
+        </div>
+
+        {% if result %}
+            <div class="result-section">
+                <h2>Kết quả nhận diện:</h2>
+                {% if result.error_message %}
+                    <p class="error-message">{{ result.error_message }}</p>
+                {% else %}
+                    <p><strong>Món ăn:</strong> {{ result.label }}</p>
+                    <p><strong>Độ tin cậy:</strong> {{ result.confidence }}</p>
+                    
+                    {% if result.image %}
+                        <img src="{{ result.image }}" alt="Uploaded Image" class="result-image">
+                    {% endif %}
+
+                    {% if result.restaurants %}
+                        <h3>Các nhà hàng gợi ý:</h3>
+                        <div class="restaurant-list">
+                            <ul>
+                                {% for restaurant in result.restaurants %}
+                                    <li>
+                                        <strong>{{ restaurant.name }}</strong><br>
+                                        Địa chỉ: {{ restaurant.address }}<br>
+                                        Đánh giá: {{ restaurant.rating }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <p>Hiện tại chưa có nhà hàng nào được tìm thấy cho món ăn "{{ result.label }}" này.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
