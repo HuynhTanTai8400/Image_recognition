@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 python-dotenv
-tensorflow == 2.18.0
+tensorflow==2.15.0
 Pillow
 Jinja2
 python-multipart
